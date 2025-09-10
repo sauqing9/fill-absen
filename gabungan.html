@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Formulir Absensi Otomatis — Responsive</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+    body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+
+    /* Animasi muncul dropdown */
+    @keyframes popDown {
+      from { transform: translateY(-6px) scale(0.98); opacity: 0; }
+      to   { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .menu-appear { animation: popDown 180ms cubic-bezier(.2,.9,.2,1) forwards; }
+
+    /* Posisi desktop vs mobile untuk dropdown */
+    .menu-desktop { top: 1rem; right: 1rem; width: 18rem; }
+    .menu-mobile  { left: 1rem; right: 1rem; bottom: 1.25rem; top: auto; width: auto; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <!-- Overlay untuk mobile (tampil saat menu terbuka) -->
+  <div id="overlay" class="hidden fixed inset-0 bg-black/30 z-40"></div>
+
+  <div class="relative max-w-md w-full bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-200">
+    <!-- Menu titik 3 -->
+    <div class="absolute top-3 right-3">
+      <button id="menuBtn" aria-expanded="false" aria-controls="menuDropdown"
+              class="p-2 rounded-full hover:bg-gray-100 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+        <!-- lebih ramah visual -->
+        <span class="sr-only">Buka menu pilihan</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <circle cx="12" cy="5" r="1.6" fill="#374151"></circle>
+          <circle cx="12" cy="12" r="1.6" fill="#374151"></circle>
+          <circle cx="12" cy="19" r="1.6" fill="#374151"></circle>
+        </svg>
+      </button>
+    </div>
+
+    <h1 class="text-2xl font-bold text-gray-800 text-center mb-3">✨ Formulir Absensi Otomatis</h1>
+    <p id="infoText" class="text-gray-600 text-center mb-6">
+      Pilih namamu lewat menu ⋮ di pojok kanan atas, lalu tekan tombol di bawah untuk absen.
+    </p>
+
+    <div class="flex flex-col sm:flex-row justify-center gap-4">
+      <button id="absenMasukBtn" class="bg-blue-600 text-white font-semibold py-3 px-6 rounded-full shadow-md hover:bg-blue-700 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
+        🚀 Absen Masuk
+      </button>
+      <button id="absenPulangBtn" class="bg-green-600 text-white font-semibold py-3 px-6 rounded-full shadow-md hover:bg-green-700 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 w-full sm:w-auto">
+        🌙 Absen Pulang
+      </button>
+    </div>
+  </div>
+
+  <!-- Dropdown menu: fixed agar selalu di depan dan tidak mempengaruhi layout card -->
+  <nav id="menuDropdown"
+       class="hidden fixed z-50 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden menu-desktop"
+       role="menu" aria-label="Pilih pengguna">
+    <ul class="divide-y divide-gray-100">
+      <!-- Jika ingin redirect langsung ke halaman eksternal, ganti data-redirect pada tiap <a> -->
+      <li>
+        <a href="?user=sauqi" data-key="sauqi" class="user-select block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-3">
+          <span class="text-lg">👤</span>
+          <div>
+            <div class="font-medium">Sauqi Muhammad Faiq</div>
+            <div class="text-xs text-gray-500">Institut Pertanian Bogor · Teknologi Rekayasa Komputer</div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="?user=ayla" data-key="ayla" class="user-select block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-3">
+          <span class="text-lg">👤</span>
+          <div>
+            <div class="font-medium">Ayla Helmi Putri Rahayu</div>
+            <div class="text-xs text-gray-500">IPB University · Manajemen Sumberdaya Lahan</div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="?user=divia" data-key="divia" class="user-select block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-3">
+          <span class="text-lg">👤</span>
+          <div>
+            <div class="font-medium">Divia Hilda Mardika</div>
+            <div class="text-xs text-gray-500">IPB University · Manajemen Sumberdaya Lahan</div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="?user=finkan" data-key="finkan" class="user-select block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-3">
+          <span class="text-lg">👤</span>
+          <div>
+            <div class="font-medium">Finkan Ahista Puri</div>
+            <div class="text-xs text-gray-500">IPB University · Manajemen Sumberdaya Lahan</div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="?user=ricko" data-key="ricko" class="user-select block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-3">
+          <span class="text-lg">👤</span>
+          <div>
+            <div class="font-medium">Ricko Mardiansyah</div>
+            <div class="text-xs text-gray-500">IPB University · Manajemen Sumberdaya Lahan</div>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+<script>
+  // Data mahasiswa
+  const users = {
+    sauqi:  { nama: "Sauqi Muhammad Faiq", kampus: "Institut Pertanian Bogor", prodi: "Teknologi Rekayasa Komputer" },
+    ayla:   { nama: "Ayla Helmi Putri Rahayu", kampus: "IPB University", prodi: "Manajemen Sumberdaya Lahan" },
+    divia:  { nama: "Divia Hilda Mardika", kampus: "IPB University", prodi: "Manajemen Sumberdaya Lahan" },
+    finkan: { nama: "Finkan Ahista Puri", kampus: "IPB University", prodi: "Manajemen Sumberdaya Lahan" },
+    ricko:  { nama: "Ricko Mardiansyah", kampus: "IPB University", prodi: "Manajemen Sumberdaya Lahan" }
+  };
+
+  // init selected dari query string (jika ada)
+  const urlParams = new URLSearchParams(window.location.search);
+  let selectedKey = urlParams.get('user');
+  let selectedUser = users[selectedKey];
+
+  const infoText = document.getElementById('infoText');
+  const menuBtn = document.getElementById('menuBtn');
+  const menuDropdown = document.getElementById('menuDropdown');
+  const overlay = document.getElementById('overlay');
+
+  function updateInfoText() {
+    if (selectedUser) {
+      infoText.textContent = `✅ Kamu login sebagai : ${selectedUser.nama}`;
+    } else {
+      infoText.textContent = 'Pilih nama lewat menu ⋮ di pojok kanan atas, lalu tekan tombol di bawah untuk absen.';
+    }
+  }
+  updateInfoText();
+
+  // Set posisi (desktop / mobile) setiap kali buka menu
+  function prepareMenuForScreen() {
+    if (window.innerWidth < 640) {
+      // mobile: tunjukkan sebagai bottom sheet
+      menuDropdown.classList.remove('menu-desktop');
+      menuDropdown.classList.add('menu-mobile');
+      menuDropdown.style.right = ''; // gunakan left/right via class
+      menuDropdown.style.left = ''; 
+    } else {
+      // desktop: top-right fixed
+      menuDropdown.classList.remove('menu-mobile');
+      menuDropdown.classList.add('menu-desktop');
+      menuDropdown.style.bottom = '';
+    }
+  }
+
+  // buka / tutup menu
+  function openMenu() {
+    prepareMenuForScreen();
+    overlay.classList.remove('hidden');
+    menuDropdown.classList.remove('hidden');
+    menuDropdown.classList.add('menu-appear');
+    setTimeout(() => menuDropdown.classList.remove('menu-appear'), 220);
+    menuBtn.setAttribute('aria-expanded', 'true');
+  }
+  function closeMenu() {
+    overlay.classList.add('hidden');
+    menuDropdown.classList.add('hidden');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  menuBtn.addEventListener('click', (e) => {
+    if (menuDropdown.classList.contains('hidden')) openMenu(); else closeMenu();
+  });
+
+  // tutup jika klik di luar / overlay / ESC
+  overlay.addEventListener('click', closeMenu);
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+
+  // Klik pilihan nama: prevent default navigation -> set selectedUser, update URL, close menu
+  document.querySelectorAll('.user-select').forEach(el => {
+    el.addEventListener('click', (ev) => {
+      ev.preventDefault();
+
+      const redirect = el.dataset.redirect; // jika mau redirect ke URL eksternal, set data-redirect di markup
+      if (redirect) {
+        // contoh fallback bila user menaruh data-redirect pada <a>
+        window.location.href = redirect;
+        return;
+      }
+
+      const key = el.dataset.key;
+      if (!users[key]) return;
+      selectedKey = key;
+      selectedUser = users[key];
+
+      // update UI dan URL tanpa reload
+      updateInfoText();
+      history.pushState(null, '', '?user=' + key);
+      closeMenu();
+    });
+  });
+
+  // Resize listener: kalau ukuran layar berubah dan menu sedang terbuka, update posisi
+  window.addEventListener('resize', () => {
+    if (!menuDropdown.classList.contains('hidden')) prepareMenuForScreen();
+  });
+
+  // Helper: pad angka (opsional)
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  // Fungsi buka Google Form (masuk / pulang)
+  function openForm(isMasuk) {
+    if (!selectedUser) {
+      alert('⚠️ Silakan pilih nama dulu lewat menu ⋮ di pojok kanan atas.');
+      return;
+    }
+
+    const today = new Date();
+    const tahun = today.getFullYear();
+    const bulan = today.getMonth() + 1;
+    const hari = today.getDate();
+    const jam = today.getHours();
+    const menit = today.getMinutes();
+
+    // isi otomatis ke form google yg kamu pakai (tetap pakai entry IDs seperti sebelumnya)
+    let baseUrl, fullUrl;
+    if (isMasuk) {
+      baseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSf1MNYXwmGaK_5O4nAPetrOtG6xcZXJ51V8X1rxaSKkwIEw3A/viewform?usp=pp_url";
+      fullUrl = baseUrl
+        + "&entry.686391925=" + encodeURIComponent(selectedUser.nama)
+        + "&entry.1972506325=" + encodeURIComponent(selectedUser.kampus)
+        + "&entry.246045167=" + encodeURIComponent(selectedUser.prodi)
+        + "&entry.85434654_hour=" + pad(jam)
+        + "&entry.85434654_minute=" + pad(menit)
+        + "&entry.145028184_year=" + tahun
+        + "&entry.145028184_month=" + bulan
+        + "&entry.145028184_day=" + hari;
+    } else {
+      baseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdvUQSyr31v1m-UYAteC4yGzeQxQ8NMorcOPKNRMy8_Irn8FA/viewform?usp=pp_url";
+      fullUrl = baseUrl
+        + "&entry.1368394489=" + encodeURIComponent(selectedUser.nama)
+        + "&entry.596760225=" + encodeURIComponent(selectedUser.kampus)
+        + "&entry.870001667=" + encodeURIComponent(selectedUser.prodi)
+        + "&entry.1132357430_hour=" + pad(jam)
+        + "&entry.1132357430_minute=" + pad(menit)
+        + "&entry.1122298737_year=" + tahun
+        + "&entry.1122298737_month=" + bulan
+        + "&entry.1122298737_day=" + hari;
+    }
+
+    window.open(fullUrl, '_blank');
+  }
+
+  // event tombol
+  document.getElementById('absenMasukBtn').addEventListener('click', () => openForm(true));
+  document.getElementById('absenPulangBtn').addEventListener('click', () => openForm(false));
+</script>
+</body>
+</html>
